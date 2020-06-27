@@ -1,0 +1,26 @@
+[
+    {
+        "numFactura": 101,
+        "Saldo": 0,
+        "Observasiones": "Pago inmediato"
+    },
+    {
+        "numFactura": 102,
+        "Saldo": 1000000,
+        "Observasiones": "Pago recivido"
+    },
+    {
+        "numFactura": 104,
+        "Saldo": 0,
+        "Observasiones": "Pago inmediato"
+    },
+    {
+        "numFactura": 105,
+        "Saldo": 10000,
+        "Observasiones": "Pago recivido"
+    },{
+        "numFactura": 103,
+        "Saldo": 10000,
+        "Observasiones": "Pago recivido"
+    }
+]
