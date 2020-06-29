@@ -1,31 +1,27 @@
-
-//function traerDatos(){
-const xhttp= new XMLHttpRequest();
-xhttp.open('GET','facturas.json',true);
-xhttp.send();
-xhttp.onreadystatechange=function(){
-    if(this.readyState==4 && this.status==200){
-        let datos= JSON.parse(this.responseText);
-        let res= document.querySelector('#res');
-        res.innerHTML='';
-        console.log(datos);
-        for(let item of datos){
-            res.innerHTML += `
-            <tr>
-                <td scope="row">${item.numFactura}</td>
-                <td>${item.fecha}</td>
-                <td>${item.tipoPago}</td>
-                <td>${item.plazo}</td>
-                <td>$${item.valorTotal}</td>
-            </tr>
-            `
-        }
-    }
-
-};
+// Vector de facturas
+var facturas = [
+    [ "345345", "2017-07-21", "Crédito", "30", "$234.454" ],
+    [ "872034", "2020-06-25", "Contado", "", "$7.435.246" ],
+    [ "293658", "2018-12-04", "Crédito", "90", "$932.937" ]
+];
 
 
-//}
+//Inicializando la tabla que que mostrara las facturas
+tablaFacturas = $('#tableFac').DataTable( {
+    data: facturas,
+    "ordering": false,
+    columns: [
+        { title: "Número Factura" },
+        { title: "Fecha Factura" },
+        { title: "Tipo Pago" },
+        { title: "Plazo" },
+        { title: "Valor Total" }
+    ]
+} );
+
+
+// Para agregar facturas
+// tablaFacturas.row.add( [ "293658", "2018-12-04", "Crédito", "90", "$932.937" ] ).draw();
 
 
     function validarFactura(){
