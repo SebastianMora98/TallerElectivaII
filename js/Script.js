@@ -67,36 +67,36 @@ $( "#inputValorAbono" ).on('input',function() {
     }
 
 });
-                                            /**
-                                             * consulta: Método para mostrar nueva tabla con datos extendidos acerca de  
-                                             * factura y sus abonos.
-                                             */
-                                            function consulta(idfact) {
-                                                //aquí va el código
-                                            }
-                                            /**
-                                             * Trigger para el botón de consulta que extrae el id de la factura que 
-                                             * se desea consultar.
-                                             * @param  event click
-                                             * @return {[type]}        [description]
-                                             */
-                                            $(document).on('click', '#consulta', function(event) {
-                                                event.preventDefault();
-                                                var row = $(this).closest('tr');
-                                                alert(row.find('td:eq(0)').text());
-                                            });
-                                            /**
-                                             * Método de prueba: En las siguientes líneas se agregan valores de
-                                             *  prueba a la tablaAbono para probar ´la ejecución del método de
-                                             *  consulta.
-                                             * @param  {[type]} ( [description]
-                                             * @return {[type]}   [description]
-                                             */
-                                            $(() => {
-                                                'use strict';
-                                                var botonConsulta = "<button id=\"consulta\"  > consulta </button>";
-                                                var filaPrueba = "<tr><td i>105</td><td>3</td><td>$432.937</td><td>2019-3-4</td><td>$432.937</td><td>" + botonConsulta + "</td></tr>";
-                                                var filaPrueba2 = "<tr><td i>235</td><td>3</td><td>$432.937</td><td>2019-3-4</td><td>$432.937</td><td>" + botonConsulta + "</td></tr>";
-                                                $('#tablaAbono tbody').append(filaPrueba);
-                                                $('#tablaAbono tbody').append(filaPrueba2);
-                                            });
+/**
+ * consulta: Método para mostrar nueva tabla con datos extendidos acerca de  
+ * factura y sus abonos.
+ */
+function consulta(idfact) {
+    //aquí va el código
+}
+/**
+ * Trigger para el botón de consulta que extrae el id de la factura que 
+ * se desea consultar.
+ * @param  event click
+ * @return {[type]}        [description]
+ */
+$(document).on('click', '#consulta', function(event) {
+    event.preventDefault();
+    var row = $(this).closest('tr');
+    alert(row.find('td:eq(0)').text());
+});
+/**
+ * Método de prueba: En las siguientes líneas se agregan valores de
+ *  prueba a la tablaAbono para probar ´la ejecución del método de
+ *  consulta.
+ * @param  {[type]} ( [description]
+ * @return {[type]}   [description]
+ */
+$(() => {
+    'use strict';
+    var botonConsulta = "<button id=\"consulta\"  > consulta </button>";
+    var filaPrueba = "<tr><td i>105</td><td>3</td><td>$432.937</td><td>2019-3-4</td><td>$432.937</td><td>" + botonConsulta + "</td></tr>";
+    var filaPrueba2 = "<tr><td i>235</td><td>3</td><td>$432.937</td><td>2019-3-4</td><td>$432.937</td><td>" + botonConsulta + "</td></tr>";
+    $('#tablaAbono tbody').append(filaPrueba);
+    $('#tablaAbono tbody').append(filaPrueba2);
+});
