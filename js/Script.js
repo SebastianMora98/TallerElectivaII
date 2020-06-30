@@ -1,12 +1,11 @@
 // Vector de facturas
 var facturas = [
-    [ "345345", "2017-07-21", "Crédito", "30", "$234.454" ],
-    [ "872034", "2020-06-25", "Contado", "", "$7.435.246" ],
-    [ "293658", "2018-12-04", "Crédito", "90", "$932.937" ]
+    [ "345345", "2017-07-21", "Crédito", "30", 234454 ],
+    [ "872034", "2020-06-25", "Contado", "", 7435246 ],
+    [ "293658", "2018-12-04", "Crédito", "90", 932937 ]
 ];
 
-
-//Inicializando la tabla que que mostrara las facturas
+//Inicializando la tabla que mostrara las facturas
 tablaFacturas = $('#tableFac').DataTable( {
     data: facturas,
     "ordering": false,
@@ -24,38 +23,48 @@ tablaFacturas = $('#tableFac').DataTable( {
 // tablaFacturas.row.add( [ "293658", "2018-12-04", "Crédito", "90", "$932.937" ] ).draw();
 
 
-    function validarFactura(){
+// Buscar Facturas
+function buscarFactura(numero){
+    var factura = [];
+    facturas.forEach(element => {
+        if(numero == element[0]){
+            factura = element;
+        }
+    });
+    return factura;
+}
 
-        var selectFac = document.getElementById("Check");
-        if(selectFac != null){
-            var numFac= document.getElementById("inputFactura").value;
-            const xhttp1= new XMLHttpRequest();
-            xhttp1.open('GET','abonos.json',true);
-            xhttp1.send();
-            xhttp1.onreadystatechange=function(){
-                if(this.readyState==4 && this.status==200){
-                    let datosAbonos= JSON.parse(this.responseText);
-                    console.log(datosAbonos);
-                    var fac;
-                    for(let item of datosAbonos){
-                        if(parseInt(item.numFactura)==numFac){
-                            fac=numFac;
-                            console.log("encontro");
-                            document.getElementById("inputSaldo").value=item.Saldo;
-                            
-                        }
-                    }
-                    console.log("Salio for");
-                    if(fac==null){
-                        document.getElementById("Check").checked = false;
-                        alert('No existe la factura '+numFac+'!!');
-                    }else{
-                        alert("Factura encontrada!!");
-                    }
 
-                }
+// Eventos - input numero de factura e input valor abono
 
-            };
+var factura;
 
-        }            
+$( "#inputNumeroFactura" ).on('input',function() {
+
+    // busca si el numero de factura ingresado ya existe y si existe guarda el
+    // array de la factura en "factura"
+
+    factura = buscarFactura($("#inputNumeroFactura").val())
+    
+    // si la factura existe
+    if(factura.length>0){
+
+        // muestra el saldo de la factura en el input Saldo Factura
+        $("#inputSaldoFactura").val(factura[4])
+    }else{
+
+        $("#inputSaldoFactura").val("")
     }
+});
+
+    // Cuando se ingresa un valor en input valor abono resta el saldo de la factura con el
+    // valor de abono ingresado y lo muestra en input Nuevo Saldo
+$( "#inputValorAbono" ).on('input',function() {
+   
+    if(factura.length>0){
+
+        // factura[4] tiene el saldo de la factura
+        $("#inputNuevoSaldo").val( factura[4] - parseInt($("#inputValorAbono").val()))
+    }
+
+});
