@@ -38,35 +38,36 @@ function buscarFactura(numero){
 
 var factura;
 
-$( "#inputNumeroFactura" ).on('input',function() {
+$( "#inputFactura" ).on('input',function() {
 
     // busca si el numero de factura ingresado ya existe y si existe guarda el
     // array de la factura en "factura"
 
-    factura = buscarFactura($("#inputNumeroFactura").val())
+    factura = buscarFactura($("#inputFactura").val())
     
     // si la factura existe
     if(factura.length>0){
 
         // muestra el saldo de la factura en el input Saldo Factura
-        $("#inputSaldoFactura").val(factura[4])
+        $("#inputSaldo").val(factura[4])
     }else{
 
-        $("#inputSaldoFactura").val("")
+        $("#inputSaldo").val("")
     }
 });
 
     // Cuando se ingresa un valor en input valor abono resta el saldo de la factura con el
     // valor de abono ingresado y lo muestra en input Nuevo Saldo
-$( "#inputValorAbono" ).on('input',function() {
+$( "#inputAbono" ).on('input',function() {
    
     if(factura.length>0){
 
         // factura[4] tiene el saldo de la factura
-        $("#inputNuevoSaldo").val( factura[4] - parseInt($("#inputValorAbono").val()))
+        $("#inputNuevoSaldo").val( factura[4] - parseInt($("#inputAbono").val()))
     }
 
 });
+
 /**
  * consulta: Método para mostrar nueva tabla con datos extendidos acerca de  
  * factura y sus abonos.

@@ -1,14 +1,20 @@
-
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
     <head>
         <meta charset="utf-8"/>
         <title>
             Taller JavaScript
         </title>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="  sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous"/>
-        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css"/>
+         <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="	sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+        <!-- Font awesome icons -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css">
+
+        <!-- Datatables -->
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
     </head>
+    
     <body name="body" id="body">
         <div class="container">
             <h2 class="card-title text-center">
@@ -30,7 +36,7 @@
                         <label for="inputNumeroFactura">
                             Numero de Factura
                         </label>
-                        <input type="number" class="form-control" id="inputNumeroFactura" required/>
+                        <input type="number" class="form-control" id="inputFactura" required/>
                     </div>
                     <div class="form-group col-md-6">
                         <label for="inputSaldoFactura">
@@ -41,10 +47,10 @@
                 </div>
                 <div class="form-row">
                     <div class="form-group col-md-6">
-                        <label for="inputValorAbono">
+                        <label for="inputAbono">
                             Valor Abono
                         </label>
-                        <input type="number" class="form-control" id="inputValorAbono" required/>
+                        <input type="number" class="form-control" id="inputAbono" required/>
                     </div>
                     <div class="form-group col-md-6">
                         <label for="inputNuevoSaldo">
@@ -54,10 +60,10 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="exampleFormControlTextarea1">
+                    <label for="observaciones">
                         Observaciones
                     </label>
-                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3">
+                    <textarea class="form-control" id="observaciones" rows="3">
                     </textarea>
                 </div>
                 <div>
@@ -134,15 +140,11 @@
             </div>
         </footer>
         <!-- Footer -->
-        <script>
-          $(document).ready(function () {
-            $('#tablFac').DataTable;
-            $('.dataTables_length').addClass('bs-select');
-          });
-        </script>
+
         <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+        <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
         <script src="js/Script.js"></script>
     </body>
 </html>
