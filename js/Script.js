@@ -56,8 +56,9 @@ function validarFactura() {
  * consulta: Método para mostrar nueva tabla con datos extendidos acerca de  
  * factura y sus abonos.
  */
-function consulta(idfact) {
-    //aquí va el código
+function consulta(idFact) {
+    console.log(idFact);
+    var tablaConsulta = "<table id=\"tablaConsulta\" class=\"table table-responsive\"></table>";
 }
 /**
  * Trigger para el botón de consulta que extrae el id de la factura que 
@@ -68,7 +69,8 @@ function consulta(idfact) {
 $(document).on('click', '#consulta', function(event) {
     event.preventDefault();
     var row = $(this).closest('tr');
-    alert(row.find('td:eq(0)').text());
+    var idFact = row.find('td:eq(0)').text();
+    consulta(idFact);
 });
 /**
  * Método de prueba: En las siguientes líneas se agregan valores de
@@ -79,7 +81,7 @@ $(document).on('click', '#consulta', function(event) {
  */
 $(() => {
     'use strict';
-    var botonConsulta = "<button id=\"consulta\"  > consulta </button>";
+    var botonConsulta = "<button id=\"consulta\"  > <img src=\"./src/lupa.png\"> </button>";
     var filaPrueba = "<tr><td i>105</td><td>3</td><td>$432.937</td><td>2019-3-4</td><td>$432.937</td><td>" + botonConsulta + "</td></tr>";
     var filaPrueba2 = "<tr><td i>235</td><td>3</td><td>$432.937</td><td>2019-3-4</td><td>$432.937</td><td>" + botonConsulta + "</td></tr>";
     $('#tablaAbono tbody').append(filaPrueba);
