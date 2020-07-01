@@ -52,7 +52,12 @@ var abonosFactura = [
 ]
 
 // Array abonos ingresados
-var abonosIngresados = []
+var abonosIngresados = [
+    //numero, saldo, abono, nuevo saldo, observaciones
+    ["293658",250000,100000,134454,"observacion"],
+    ["293658",250000,100000,134454,"observacion"]
+]
+
 
 // Para agregar facturas
 // tablaFacturas.row.add( [ "293658", "2018-12-04", "Crédito", "90", "$932.937" ] ).draw();
@@ -117,6 +122,28 @@ $( "#formulario" ).submit(function( event ) {
     ]);
     console.log("Abonos ingresados", abonosIngresados)
 }); 
+
+// metodo que busca los abonos dependiendo del numero de factura
+// retorna un vector con los abonos asociados a la factura
+
+function buscarAbonos(numeroFactura)
+{
+    var abonos = [];
+    abonosIngresados.forEach(element => {
+        if(element[0]==numeroFactura){
+            abonos.push(element)
+        }
+    });
+
+    return abonos;
+}
+
+// array de abonos
+// console.log("buscar abonos", buscarAbonos("293658"));
+
+// cantidad de abonos 
+// console.log("buscar abonos", buscarAbonos("293658").length);
+
 
 
 /**
