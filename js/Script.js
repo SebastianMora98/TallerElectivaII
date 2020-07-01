@@ -138,12 +138,26 @@ function buscarAbonos(numeroFactura)
     return abonos;
 }
 
-// array de abonos
-// console.log("buscar abonos", buscarAbonos("293658"));
+//devuelve array con numero de abonos y el total
+function numeroAbonosYTotal(numeroFactura){
 
-// cantidad de abonos 
-// console.log("buscar abonos", buscarAbonos("293658").length);
+    if(buscarAbonos(numeroFactura).length>0){
+        var numeroAbonos = buscarAbonos(numeroFactura).length;
+        var totalFactura = 0;
+        buscarAbonos(numeroFactura).forEach(element => {
+            console.log("valor "+  element[1])
+            totalFactura = totalFactura + parseInt(element[1]);
+        });
+        return [numeroAbonos, totalFactura]
+    }else{
+        return null;
+    }
+}
 
+/**ejemplo
+ * console.log("numero de abonos " + numeroAbonosYTotal("293658")[0] + " total " +  numeroAbonosYTotal("293658")[1])
+ * resultado en consola -> numero de abonos 2 total 500000
+ */
 
 
 /**
