@@ -1,12 +1,41 @@
-// Vector de facturas
-var facturas = [
+//Objeto JSON facturas
+var facturasJSONTxt = '{"facturas":[' +
+'{"numero":"345345","fecha":"2017-07-21","tipoPago":"Crédito","plazo":"30","valorTotal":"234454" },' +
+'{"numero":"872034","fecha":"2020-06-25","tipoPago":"Contado","plazo":"","valorTotal":"7435246" },' +
+'{"numero":"293658","fecha":"2018-12-04","tipoPago":"Crédito","plazo":"90","valorTotal":"932937" } ]}';
+
+// Objeto facturas
+var facturasJSON = JSON.parse(facturasJSONTxt);
+
+
+// datosFacturas es un array que guarda arrays con unicamente los datos de las facturas
+// Ejemplo
+
+/* var datosFacturas = [
     ["345345", "2017-07-21", "Crédito", "30", 234454],
     ["872034", "2020-06-25", "Contado", "", 7435246],
     ["293658", "2018-12-04", "Crédito", "90", 932937]
-];
+]; */
+
+var datosFacturas = [];
+
+facturasJSON.facturas.forEach(factura => {
+    datosFacturas.push([factura.numero,factura.fecha,factura.tipoPago, factura.plazo, factura.valorTotal]);
+});
+
+//Array de abonos por factura que mostrara la tabla de facturas
+var abonosFactura = [
+    ["293658", 2, "$500.000", "2019-03-04", "90", "$432.937"]
+]
+
+// Array abonos ingresados
+var abonosIngresados = []
+
+
+
 //Inicializando la tabla que mostrara las facturas
 tablaFacturas = $('#tableFac').DataTable( {
-    data: facturas,
+    data: datosFacturas,
     "ordering": false,
     columns: [
         { title: "Número Factura" },
@@ -18,15 +47,22 @@ tablaFacturas = $('#tableFac').DataTable( {
 } );
 
 
+var abonosFactura = [
+    ["293658", 2, "$500.000", "2019-03-04", "90", "$432.937"]
+]
+
+// Array abonos ingresados
+var abonosIngresados = []
+
 // Para agregar facturas
 // tablaFacturas.row.add( [ "293658", "2018-12-04", "Crédito", "90", "$932.937" ] ).draw();
 
 
 // Buscar Facturas
-function buscarFactura(numero){
+function buscarFactura(numero) {
     var factura = [];
-    facturas.forEach(element => {
-        if(numero == element[0]){
+    datosFacturas.forEach(element => {
+        if (numero == element[0]) {
             factura = element;
         }
     });
@@ -38,35 +74,50 @@ function buscarFactura(numero){
 
 var factura;
 
-$( "#inputFactura" ).on('input',function() {
+$("#inputNumeroFactura").on('input', function () {
 
     // busca si el numero de factura ingresado ya existe y si existe guarda el
     // array de la factura en "factura"
 
-    factura = buscarFactura($("#inputFactura").val())
-    
+    factura = buscarFactura($("#inputNumeroFactura").val())
+    console.log(factura)
     // si la factura existe
-    if(factura.length>0){
+    if (factura.length > 0) {
 
         // muestra el saldo de la factura en el input Saldo Factura
-        $("#inputSaldo").val(factura[4])
-    }else{
+        $("#inputSaldoFactura").val(factura[4])
+    } else {
 
-        $("#inputSaldo").val("")
+        $("#inputSaldoFactura").val("")
     }
 });
 
-    // Cuando se ingresa un valor en input valor abono resta el saldo de la factura con el
-    // valor de abono ingresado y lo muestra en input Nuevo Saldo
-$( "#inputAbono" ).on('input',function() {
-   
-    if(factura.length>0){
+// Cuando se ingresa un valor en input valor abono resta el saldo de la factura con el
+// valor de abono ingresado y lo muestra en input Nuevo Saldo
+$("#inputAbono").on('input', function () {
+
+    if (factura.length > 0) {
 
         // factura[4] tiene el saldo de la factura
-        $("#inputNuevoSaldo").val( factura[4] - parseInt($("#inputAbono").val()))
+        $("#inputNuevoSaldo").val(factura[4] - parseInt($("#inputAbono").val()))
     }
 
 });
+
+
+// Guarda los datos enviados del formulario al array abonosIngresados
+$( "#formulario" ).submit(function( event ) {
+    event.preventDefault();
+    abonosIngresados.push([   
+        $("#inputNumeroFactura").val(), 
+        $("#inputSaldoFactura").val(), 
+        $("#inputValorAbono").val(), 
+        $("#inputNuevoSaldo").val(),
+        $("#textareaObservaciones").val()
+    ]);
+    console.log("Abonos ingresados", abonosIngresados)
+}); 
+
 
 /**
  * consulta: Método para mostrar nueva tabla con datos extendidos acerca de  
