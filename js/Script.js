@@ -1,8 +1,8 @@
 //Objeto JSON facturas
 var facturasJSONTxt = '{"facturas":[' +
-'{"numero":"345345","fecha":"2017-07-21","tipoPago":"Crédito","plazo":"30","valorTotal":"234454" },' +
-'{"numero":"872034","fecha":"2020-06-25","tipoPago":"Contado","plazo":"","valorTotal":"7435246" },' +
-'{"numero":"293658","fecha":"2018-12-04","tipoPago":"Crédito","plazo":"90","valorTotal":"932937" } ]}';
+    '{"numero":"345345","fecha":"2017-07-21","tipoPago":"Crédito","plazo":"30","valorTotal":"234454" },' +
+    '{"numero":"872034","fecha":"2020-06-25","tipoPago":"Contado","plazo":"","valorTotal":"7435246" },' +
+    '{"numero":"293658","fecha":"2018-12-04","tipoPago":"Crédito","plazo":"90","valorTotal":"932937" } ]}';
 
 // Objeto facturas
 var facturasJSON = JSON.parse(facturasJSONTxt);
@@ -20,7 +20,7 @@ var facturasJSON = JSON.parse(facturasJSONTxt);
 var datosFacturas = [];
 
 facturasJSON.facturas.forEach(factura => {
-    datosFacturas.push([factura.numero,factura.fecha,factura.tipoPago, factura.plazo, factura.valorTotal]);
+    datosFacturas.push([factura.numero, factura.fecha, factura.tipoPago, factura.plazo, factura.valorTotal]);
 });
 
 //Array de abonos por factura que mostrara la tabla de facturas
@@ -34,7 +34,7 @@ var abonosIngresados = []
 
 
 //Inicializando la tabla que mostrara las facturas
-tablaFacturas = $('#tableFac').DataTable( {
+tablaFacturas = $('#tableFac').DataTable({
     data: datosFacturas,
     "ordering": false,
     columns: [
@@ -44,7 +44,7 @@ tablaFacturas = $('#tableFac').DataTable( {
         { title: "Plazo" },
         { title: "Valor Total" }
     ]
-} );
+});
 
 
 var abonosFactura = [
@@ -54,8 +54,8 @@ var abonosFactura = [
 // Array abonos ingresados
 var abonosIngresados = [
     //numero, saldo, abono, nuevo saldo, observaciones
-    ["293658",250000,100000,134454,"observacion"],
-    ["293658",250000,100000,134454,"observacion"]
+    ["293658", 250000, 100000, 134454, "observacion"],
+    ["293658", 250000, 100000, 134454, "observacion"]
 ]
 
 
@@ -111,26 +111,25 @@ $("#inputAbono").on('input', function () {
 
 
 // Guarda los datos enviados del formulario al array abonosIngresados
-$( "#formulario" ).submit(function( event ) {
+$("#formulario").submit(function (event) {
     event.preventDefault();
-    abonosIngresados.push([   
-        $("#inputNumeroFactura").val(), 
-        $("#inputSaldoFactura").val(), 
-        $("#inputValorAbono").val(), 
+    abonosIngresados.push([
+        $("#inputNumeroFactura").val(),
+        $("#inputSaldoFactura").val(),
+        $("#inputValorAbono").val(),
         $("#inputNuevoSaldo").val(),
         $("#textareaObservaciones").val()
     ]);
     console.log("Abonos ingresados", abonosIngresados)
-}); 
+});
 
 // metodo que busca los abonos dependiendo del numero de factura
 // retorna un vector con los abonos asociados a la factura
 
-function buscarAbonos(numeroFactura)
-{
+function buscarAbonos(numeroFactura) {
     var abonos = [];
     abonosIngresados.forEach(element => {
-        if(element[0]==numeroFactura){
+        if (element[0] == numeroFactura) {
             abonos.push(element)
         }
     });
@@ -139,25 +138,68 @@ function buscarAbonos(numeroFactura)
 }
 
 //devuelve array con numero de abonos y el total
-function numeroAbonosYTotal(numeroFactura){
+function numeroAbonosYTotal(numeroFactura) {
 
-    if(buscarAbonos(numeroFactura).length>0){
+    if (buscarAbonos(numeroFactura).length > 0) {
         var numeroAbonos = buscarAbonos(numeroFactura).length;
         var totalFactura = 0;
         buscarAbonos(numeroFactura).forEach(element => {
-            console.log("valor "+  element[1])
+            console.log("valor " + element[1])
             totalFactura = totalFactura + parseInt(element[1]);
         });
         return [numeroAbonos, totalFactura]
-    }else{
+    } else {
         return null;
     }
+
 }
 
 /**ejemplo
  * console.log("numero de abonos " + numeroAbonosYTotal("293658")[0] + " total " +  numeroAbonosYTotal("293658")[1])
  * resultado en consola -> numero de abonos 2 total 500000
  */
+
+
+//-----------------------------------------------------------------------------------------------------------------------------
+function sumarDiasAFecha(fechaString, dias){
+    var fecha =  new Date(fechaString);
+     // fecha String debe tener este formato 'YYYY-MM-DD' -> '2016-01-01'
+    fecha.setDate(fecha.getDate() + parseInt(dias));
+    console.log(fecha)
+    var año = fecha.getFullYear();
+    var mes = fecha.getMonth()+1;
+    var dia = fecha.getDate();
+    
+    if(mes>=0 && mes < 10){
+       mes = "0"+mes
+    }
+    if(dia>=0 && dia < 10){
+        dia = "0"+dia
+     }
+    return año+"-"+mes+"-"+dia;
+}
+
+/**Calcular fecha de vencimiento devuelve un string de la fecha de vencimiento de una factura
+ * con tipo de pago = "Crédito" dependiendo del plazo que tenga.
+ */
+
+ function CalcularFechaVencimiento(numeroFactura){
+    if(buscarFactura(numeroFactura)[2]=="Crédito"){
+        var fecha = buscarFactura(numeroFactura)[1];
+        var plazo = buscarFactura(numeroFactura)[3];
+        var fechaVencimiento = sumarDiasAFecha(fecha, plazo);
+        console.log("fecha: "+ fecha," | plazo: "+plazo+" |fecha vencimiento: "+fechaVencimiento)
+        return fecha;
+    }else{
+        console.log("la factura no tiene metodo de pago = Crédito")
+        return null;
+    }
+ }
+
+// CalcularFechaVencimiento("293658")
+// toma el numero de factura, obtiene la fecha 2018-12-04 le suma 90 del plazo y retorna '2019-03-03'
+//-----------------------------------------------------------------------------------------------------------------------------
+
 
 
 /**
@@ -173,7 +215,7 @@ function consulta(idfact) {
  * @param  event click
  * @return {[type]}        [description]
  */
-$(document).on('click', '#consulta', function(event) {
+$(document).on('click', '#consulta', function (event) {
     event.preventDefault();
     var row = $(this).closest('tr');
     alert(row.find('td:eq(0)').text());
