@@ -14,9 +14,6 @@ facturasJSON.facturas.forEach(factura => {
     datosFacturas.push([factura.numero, factura.fecha, factura.tipoPago, factura.plazo, factura.valorTotal]);
 });
 //Array de abonos por factura que mostrara la tabla de facturas
-var abonosFactura = [
-    ["293658", 2, "$500.000", "2019-03-04", "90", "$432.937"]
-]
 // Array abonos ingresados
 var abonosIngresados = []
 //Inicializando la tabla que mostrara las facturas
@@ -87,6 +84,7 @@ $("#formulario").submit(function(event) {
         $("#textareaObservaciones").val()
     ]);
     console.log("Abonos ingresados", abonosIngresados)
+    mostrarTAbonos();
 });
 // metodo que busca los abonos dependiendo del numero de factura
 // retorna un vector con los abonos asociados a la factura
@@ -99,19 +97,16 @@ function buscarAbonos(numeroFactura) {
     });
     return abonos;
 }
-//devuelve array con numero de abonos y el total
-function numeroAbonosYTotal(numeroFactura) {
-    if (buscarAbonos(numeroFactura).length > 0) {
-        var numeroAbonos = buscarAbonos(numeroFactura).length;
-        var totalFactura = 0;
-        buscarAbonos(numeroFactura).forEach(element => {
-            console.log("valor " + element[1])
-            totalFactura = totalFactura + parseInt(element[1]);
-        });
-        return [numeroAbonos, totalFactura];
-    } else {
-        return null;
-    }
+/*
+Método para encontrar el valor total en los abonos
+ */
+function totalAbonos(arrayAbonos) {
+    var totalFactura = 0;
+    arrayAbonos.forEach(element => {
+        console.log("valor " + element[1])
+        totalFactura = totalFactura + parseInt(element[1]);
+    });
+    return totalFactura;
 }
 /**ejemplo
  * console.log("numero de abonos " + numeroAbonosYTotal("293658")[0] + " total " +  numeroAbonosYTotal("293658")[1])
@@ -152,36 +147,38 @@ function CalcularFechaVencimiento(numeroFactura) {
 // CalcularFechaVencimiento("293658")
 // toma el numero de factura, obtiene la fecha 2018-12-04 le suma 90 del plazo y retorna '2019-03-03'
 //-----------------------------------------------------------------------------------------------------------------------------
+function limpiarTabla(nombreTabla) {
+    $("#" + nombreTabla + " tbody").empty();
+}
 /**
- * Añade las variables a mostrar en la tablaAbonos: Número de factura, # de Abonos, Total de Abonos, 
+ * mostrarTAbonos[Añade las variables a mostrar en la tablaAbonos: Número de factura, # de Abonos, Total de Abonos, 
  * Fecha de Vencimiento, Saldo, Opción de consultar. Esta información será de las facturas con tipo
- * de pago "crédito", a las cuales ya se les hayan hecho abonos.
- * @param  {[type]} idFact [description]
- * @return {[type]}        [description]
+ * de pago "crédito", a las cuales ya se les hayan hecho abonos. Lo que hace es que toma información
+ * de los métodos numeroAbonosYTotal() y CalcularFechaVencimiento() de las facturas y muestra la información en 
+ * conjunto.
  **/
 function mostrarTAbonos() {
+    limpiarTabla("tablaFAbono");
     var idFact = "";
+    var numAbono = 0;
+    var fechaVenc = "";
+    var saldo = "";
+    var fila = "";
+    var botonConsulta = "<button id=\"consulta\"  > <img src=\"./src/lupa.png\"> </button>";
     for (var i = 0; i < datosFacturas.length; i++) {
         if (datosFacturas[i][2] == "Crédito") {
             idFact = datosFacturas[i][0];
-            for (var j = 0; j < abonosFactura.length; j++) {
-                if (idFact == abonosFactura[j][0]) {
-                    var botonConsulta = "<button id=\"consulta\"  > <img src=\"./src/lupa.png\"> </button>";
-                    var numAbono = numeroAbonosYTotal(idFact);
-                    var totalAbonos = numeroAbonosYTotal(idFact);
-                    var fechaVenc = CalcularFechaVencimiento(idFact);
-                    var filaPrueba = "<tr><td>" + idFact + "</td><td>" + numAbono + "</td><td>" + totalAbonos + "</td><td>" + fechaVenc + "</td><td>$432.937</td><td>" + botonConsulta + "</td></tr>";
-                    $('#tablaFAbono tbody').append(filaPrueba);
-                }
+            if (buscarAbonos(idFact).length > 0) {
+                fila = "<tr><td>" + idFact + "</td><td>" + buscarAbonos(idFact).length + "</td><td>" + totalAbonos(buscarAbonos(idFact)) + "</td><td>" + CalcularFechaVencimiento(idFact) + "</td><td>" + saldo + "</td><td>" + botonConsulta + "</td></tr>";
+                $('#tablaFAbono tbody').append(fila);
             }
         }
     }
-    /*
-     */
 }
 /**
- * consulta: Método para mostrar nueva tabla con datos extendidos acerca de  
- * factura y sus abonos.
+ * [Método para mostrar nueva tabla con datos extendidos acerca de  
+ * factura y sus abonos].
+ * @param {var} [idFact] [Identificador de la factura a consultar]
  */
 function consulta(idFact) {
     console.log(idFact);
@@ -201,9 +198,8 @@ $(document).on('click', '#consulta', function(event) {
     consulta(idFact);
 });
 /**
- * Método de prueba: En las siguientes líneas se agregan valores de
- *  prueba a la tablaAbono para probar ´la ejecución del método de
- *  consulta. 
+ * Método para mostrar los créditos con abonos que se encuentran en el sistema
+ * al iniciar la página
  *  */
 $(() => {
     'use strict';
