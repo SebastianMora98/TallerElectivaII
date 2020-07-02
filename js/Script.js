@@ -138,7 +138,7 @@ function CalcularFechaVencimiento(numeroFactura) {
         var plazo = buscarFactura(numeroFactura)[3];
         var fechaVencimiento = sumarDiasAFecha(fecha, plazo);
         console.log("fecha: " + fecha, " | plazo: " + plazo + " |fecha vencimiento: " + fechaVencimiento)
-        return fecha;
+        return fechaVencimiento;
     } else {
         console.log("la factura no tiene metodo de pago = Crédito")
         return null;
