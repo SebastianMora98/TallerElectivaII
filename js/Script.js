@@ -148,11 +148,13 @@ function CalcularFechaVencimiento(numeroFactura) {
 // toma el numero de factura, obtiene la fecha 2018-12-04 le suma 90 del plazo y retorna '2019-03-03'
 //-----------------------------------------------------------------------------------------------------------------------------
 /**
- * limpiarTabla [Método para limpiar los registros de la tabla antes de refrescarla]
+ * limpiarTabla [Método para limpiar los registros de la tabla antes de refrescarla limpia también las consultas
+ * para evitar consultas]
  * @param  {var} nombreTabla [Nombre de la tabla cuyos datos se van a borrar]
  */
 function limpiarTabla(nombreTabla) {
     $("#" + nombreTabla + " tbody").empty();
+    $('#divTablaConsulta').empty();
 }
 /**
  * mostrarTAbonos Añade las variables a mostrar en la tablaAbonos: Número de factura, # de Abonos, Total de Abonos, 
@@ -197,7 +199,7 @@ function consulta(idFact) {
     }
     var tablaAbonos = "<table id=\"tablaAbonos\" class=\"table table-borderless\"><thead ><tr><th scope=\"col\" class=\"\"></th><th scope=\"col\" class=\"\">#</th><th scope=\"col\" class=\"\">Valor de Abono</th><th scope=\"col\" class=\"numFact\">Observaciones</th></tr></thead><tbody>";
     for (var j = 0; j < abonos.length; j++) {
-        tablaAbonos += "<tr><td><img src=\"./src/icons/arrow-return-right.svg\"></td><th scope=\"row\">" + j + "</th><td>" + abonos[j][2] + "</td><td>" + abonos[j][4] + "</td></tr>";
+        tablaAbonos += "<tr><td><img src=\"./src/icons/arrow-return-right.svg\"></td><th scope=\"row\">" + (j + 1) + "</th><td>" + abonos[j][2] + "</td><td>" + abonos[j][4] + "</td></tr>";
     }
     tablaAbonos += "</tbody></table>";
     cuerpoTabla += "<tr><td colspan=\"4\">" + tablaAbonos + "</td></tr>";
@@ -223,7 +225,6 @@ $(document).on('click', '#consulta', function(event) {
 /**
  * Trigger para ocultar la consulta.
  * @param  {[type]} event
- * @return {[type]}        [description]
  */
 $(document).on('click', '#ocultarConsulta', function(event) {
     event.preventDefault();
