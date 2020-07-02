@@ -83,7 +83,7 @@ $("#formulario").submit(function(event) {
         $("#inputNuevoSaldo").val(),
         $("#textareaObservaciones").val()
     ]);
-    console.log("Abonos ingresados", abonosIngresados)
+    console.log("Abonos ingresados", abonosIngresados);
     mostrarTAbonos();
 });
 // metodo que busca los abonos dependiendo del numero de factura
@@ -103,8 +103,8 @@ Método para encontrar el valor total en los abonos
 function totalAbonos(arrayAbonos) {
     var totalFactura = 0;
     arrayAbonos.forEach(element => {
-        console.log("valor " + element[1])
-        totalFactura = totalFactura + parseInt(element[1]);
+        console.log("valor " + element[2])
+        totalFactura = totalFactura + parseInt(element[2]);
     });
     return totalFactura;
 }
@@ -147,11 +147,15 @@ function CalcularFechaVencimiento(numeroFactura) {
 // CalcularFechaVencimiento("293658")
 // toma el numero de factura, obtiene la fecha 2018-12-04 le suma 90 del plazo y retorna '2019-03-03'
 //-----------------------------------------------------------------------------------------------------------------------------
+/**
+ * limpiarTabla [Método para limpiar los registros de la tabla antes de refrescarla]
+ * @param  {var} nombreTabla [Nombre de la tabla cuyos datos se van a borrar]
+ */
 function limpiarTabla(nombreTabla) {
     $("#" + nombreTabla + " tbody").empty();
 }
 /**
- * mostrarTAbonos[Añade las variables a mostrar en la tablaAbonos: Número de factura, # de Abonos, Total de Abonos, 
+ * mostrarTAbonos Añade las variables a mostrar en la tablaAbonos: Número de factura, # de Abonos, Total de Abonos, 
  * Fecha de Vencimiento, Saldo, Opción de consultar. Esta información será de las facturas con tipo
  * de pago "crédito", a las cuales ya se les hayan hecho abonos. Lo que hace es que toma información
  * de los métodos numeroAbonosYTotal() y CalcularFechaVencimiento() de las facturas y muestra la información en 
@@ -160,15 +164,14 @@ function limpiarTabla(nombreTabla) {
 function mostrarTAbonos() {
     limpiarTabla("tablaFAbono");
     var idFact = "";
-    var numAbono = 0;
-    var fechaVenc = "";
     var saldo = "";
     var fila = "";
-    var botonConsulta = "<button id=\"consulta\"  > <img src=\"./src/lupa.png\"> </button>";
+    var botonConsulta = "<button id=\"consulta\"  > <img id=\"lupa\" src=\"./src/icons/zoom-in.svg\"> </button>";
     for (var i = 0; i < datosFacturas.length; i++) {
         if (datosFacturas[i][2] == "Crédito") {
             idFact = datosFacturas[i][0];
             if (buscarAbonos(idFact).length > 0) {
+                saldo = buscarAbonos(idFact)[0][3];
                 fila = "<tr><td>" + idFact + "</td><td>" + buscarAbonos(idFact).length + "</td><td>" + totalAbonos(buscarAbonos(idFact)) + "</td><td>" + CalcularFechaVencimiento(idFact) + "</td><td>" + saldo + "</td><td>" + botonConsulta + "</td></tr>";
                 $('#tablaFAbono tbody').append(fila);
             }
@@ -176,15 +179,31 @@ function mostrarTAbonos() {
     }
 }
 /**
- * [Método para mostrar nueva tabla con datos extendidos acerca de  
+ * [Método para mostrar nueva tabla anidada con datos extendidos acerca de  
  * factura y sus abonos].
  * @param {var} [idFact] [Identificador de la factura a consultar]
  */
 function consulta(idFact) {
     console.log(idFact);
+    var elementos = "<hr style=\"color: #0056b2;\"/> <h2>Consulta</h2><p>Aquí se puede ver información general de la factura y sus abonos.</p>";
+    var tableConsulta = "<table id=\"tablaConsulta\" class=\"table\"><thead class=\"thead-dark\"><tr><th scope=\"col\" class=\"numFact\">Numero de Factura</th><th scope=\"col\">Fecha de Factura</th><th scope=\"col\">Fecha Vencimiento</th><th scope=\"col\">Plazo</th><th scope=\"col\">Saldo</th><th scope=\"col\">Valor Total</th></tr></thead><tbody></tbody></table>";
+    var cuerpoTabla = "";
+    var abonos = buscarAbonos(idFact);
     for (var i = 0; i < datosFacturas.length; i++) {
-        alert(datosFacturas[i]);
+        if (datosFacturas[i][0] == idFact) {
+            cuerpoTabla = "<tr><td>" + datosFacturas[i][0] + "</td><td>" + datosFacturas[i][1] + "</td><td>" + CalcularFechaVencimiento(idFact) + "</td><td>" + datosFacturas[i][3] + "</td><td>" + abonos[0][3] + "</td><td>" + totalAbonos(buscarAbonos(idFact)) + "</td></tr>";
+            break;
+        }
     }
+    var tablaAbonos = "<table id=\"tablaAbonos\" class=\"table table-borderless\"><thead ><tr><th scope=\"col\" class=\"\"></th><th scope=\"col\" class=\"\">#</th><th scope=\"col\" class=\"\">Valor de Abono</th><th scope=\"col\" class=\"numFact\">Observaciones</th></tr></thead><tbody>";
+    for (var j = 0; j < abonos.length; j++) {
+        tablaAbonos += "<tr><td><img src=\"./src/icons/arrow-return-right.svg\"></td><th scope=\"row\">" + j + "</th><td>" + abonos[j][2] + "</td><td>" + abonos[j][4] + "</td></tr>";
+    }
+    tablaAbonos += "</tbody></table>";
+    cuerpoTabla += "<tr><td colspan=\"4\">" + tablaAbonos + "</td></tr>";
+    $('#divTablaConsulta').append(elementos);
+    $('#divTablaConsulta').append(tableConsulta);
+    $('#tablaConsulta tbody').append(cuerpoTabla);
 }
 /**
  * Trigger para el botón de consulta que extrae el id de la factura que 
@@ -196,6 +215,21 @@ $(document).on('click', '#consulta', function(event) {
     var row = $(this).closest('tr');
     var idFact = row.find('td:eq(0)').text();
     consulta(idFact);
+    //Cambia el icono del botón
+    $('#lupa').attr("src", "./src/icons/zoom-out.svg");
+    //Cambia el evento del botón
+    $('#consulta').attr("id", "ocultarConsulta");
+});
+/**
+ * Trigger para ocultar la consulta.
+ * @param  {[type]} event
+ * @return {[type]}        [description]
+ */
+$(document).on('click', '#ocultarConsulta', function(event) {
+    event.preventDefault();
+    $('#lupa').attr("src", "./src/icons/zoom-in.svg");
+    $('#ocultarConsulta').attr("id", "consulta");
+    $('#divTablaConsulta').empty();
 });
 /**
  * Método para mostrar los créditos con abonos que se encuentran en el sistema
