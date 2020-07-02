@@ -83,7 +83,7 @@ $("#formulario").submit(function(event) {
         $("#inputNuevoSaldo").val(),
         $("#textareaObservaciones").val()
     ]);
-    console.log("Abonos ingresados", abonosIngresados)
+    console.log("Abonos ingresados", abonosIngresados);
     mostrarTAbonos();
 });
 // metodo que busca los abonos dependiendo del numero de factura
@@ -185,7 +185,6 @@ function mostrarTAbonos() {
  */
 function consulta(idFact) {
     console.log(idFact);
-    $('#lupa').attr("src", "./src/icons/zoom-out.svg");
     var elementos = "<hr style=\"color: #0056b2;\"/> <h2>Consulta</h2><p>Aquí se puede ver información general de la factura y sus abonos.</p>";
     var tableConsulta = "<table id=\"tablaConsulta\" class=\"table\"><thead class=\"thead-dark\"><tr><th scope=\"col\" class=\"numFact\">Numero de Factura</th><th scope=\"col\">Fecha de Factura</th><th scope=\"col\">Fecha Vencimiento</th><th scope=\"col\">Plazo</th><th scope=\"col\">Saldo</th><th scope=\"col\">Valor Total</th></tr></thead><tbody></tbody></table>";
     var cuerpoTabla = "";
@@ -216,6 +215,21 @@ $(document).on('click', '#consulta', function(event) {
     var row = $(this).closest('tr');
     var idFact = row.find('td:eq(0)').text();
     consulta(idFact);
+    //Cambia el icono del botón
+    $('#lupa').attr("src", "./src/icons/zoom-out.svg");
+    //Cambia el evento del botón
+    $('#consulta').attr("id", "ocultarConsulta");
+});
+/**
+ * Trigger para ocultar la consulta.
+ * @param  {[type]} event
+ * @return {[type]}        [description]
+ */
+$(document).on('click', '#ocultarConsulta', function(event) {
+    event.preventDefault();
+    $('#lupa').attr("src", "./src/icons/zoom-in.svg");
+    $('#ocultarConsulta').attr("id", "consulta");
+    $('#divTablaConsulta').empty();
 });
 /**
  * Método para mostrar los créditos con abonos que se encuentran en el sistema
