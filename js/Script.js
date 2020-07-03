@@ -79,9 +79,9 @@ $("#formulario").submit(function(event) {
     abonosIngresados.push([
         $("#inputNumeroFactura").val(),
         $("#inputSaldoFactura").val(),
-        $("#inputValorAbono").val(),
+        $("#inputAbono").val(),
         $("#inputNuevoSaldo").val(),
-        $("#textareaObservaciones").val()
+        $("#observaciones").val()
     ]);
     console.log("Abonos ingresados", abonosIngresados);
     mostrarTAbonos();
