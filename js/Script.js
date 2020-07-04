@@ -207,7 +207,7 @@ function consulta(idFact) {
         tablaAbonos += "<tr ><td><img src=\"./src/icons/arrow-return-right.svg\"></td><th scope=\"row\">" + (j + 1) + "</th><td>" + abonos[j][2] + "</td><td>" + abonos[j][4] + "</td></tr>";
     }
     tablaAbonos += "</tbody></table>";
-    infoFactura += "<tr id=" + idFact + "><td colspan=\"4\">" + tablaAbonos + "</td></tr>";
+    infoFactura += "<tr id=" + idFact + "><td colspan=\"6\">" + tablaAbonos + "</td></tr>";
     $('#tablaConsulta #principal').append(infoFactura);
 }
 /**
@@ -238,6 +238,7 @@ $(document).on('click', '.ocultarConsulta', function(event) {
     $(this).find('img').attr("src", "./src/icons/zoom-in.svg");
     $(this).attr("class", "consulta");
     $('#tablaConsulta #' + idFact + '').remove();
+    //Si la tabla de consultas está vacía elimina esa parte de la página
     if ($('#tablaConsulta #principal').is(':empty')) {
         $('#divTablaConsulta').empty();
     }
