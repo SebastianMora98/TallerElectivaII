@@ -1,0 +1,16 @@
+.card-header {
+    background: white;
+    background: -webkit-linear-gradient(to right, #2b32b2, cyan);
+    background: linear-gradient(to right, #2b32b2, cyan);
+}
+.card-header h1 {
+    color: white;
+    font-size: 3em;
+    display: block;
+}
+#consulta {
+    display: flex;
+    border: none;
+    position: :fixed;
+    background-color: transparent;
+}
