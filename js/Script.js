@@ -67,10 +67,10 @@ $("#inputNumeroFactura").on('input', function() {
 });
 // Cuando se ingresa un valor en input valor abono resta el saldo de la factura con el
 // valor de abono ingresado y lo muestra en input Nuevo Saldo
-$("#inputAbono").on('input', function() {
+$("#inputValorAbono").on('input', function() {
     if (factura.length > 0) {
         // factura[4] tiene el saldo de la factura
-        $("#inputNuevoSaldo").val(factura[4] - parseInt($("#inputAbono").val()))
+        $("#inputNuevoSaldo").val(factura[4] - parseInt($("#inputValorAbono").val()))
     }
 });
 // Guarda los datos enviados del formulario al array abonosIngresados
@@ -148,11 +148,13 @@ function CalcularFechaVencimiento(numeroFactura) {
 // toma el numero de factura, obtiene la fecha 2018-12-04 le suma 90 del plazo y retorna '2019-03-03'
 //-----------------------------------------------------------------------------------------------------------------------------
 /**
- * limpiarTabla [Método para limpiar los registros de la tabla antes de refrescarla]
+ * limpiarTabla [Método para limpiar los registros de la tabla antes de refrescarla limpia también las consultas
+ * para evitar consultas]
  * @param  {var} nombreTabla [Nombre de la tabla cuyos datos se van a borrar]
  */
 function limpiarTabla(nombreTabla) {
     $("#" + nombreTabla + " tbody").empty();
+    $('#divTablaConsulta').empty();
 }
 /**
  * mostrarTAbonos Añade las variables a mostrar en la tablaAbonos: Número de factura, # de Abonos, Total de Abonos, 
@@ -166,7 +168,7 @@ function mostrarTAbonos() {
     var idFact = "";
     var saldo = "";
     var fila = "";
-    var botonConsulta = "<button id=\"consulta\"  > <img id=\"lupa\" src=\"./src/icons/zoom-in.svg\"> </button>";
+    var botonConsulta = "<button class=\"consulta\"  > <img id=\"lupa\" src=\"./src/icons/zoom-in.svg\"> </button>";
     for (var i = 0; i < datosFacturas.length; i++) {
         if (datosFacturas[i][2] == "Crédito") {
             idFact = datosFacturas[i][0];
@@ -185,51 +187,61 @@ function mostrarTAbonos() {
  */
 function consulta(idFact) {
     console.log(idFact);
-    var elementos = "<hr style=\"color: #0056b2;\"/> <h2>Consulta</h2><p>Aquí se puede ver información general de la factura y sus abonos.</p>";
-    var tableConsulta = "<table id=\"tablaConsulta\" class=\"table\"><thead class=\"thead-dark\"><tr><th scope=\"col\" class=\"numFact\">Numero de Factura</th><th scope=\"col\">Fecha de Factura</th><th scope=\"col\">Fecha Vencimiento</th><th scope=\"col\">Plazo</th><th scope=\"col\">Saldo</th><th scope=\"col\">Valor Total</th></tr></thead><tbody></tbody></table>";
-    var cuerpoTabla = "";
+    if ($('#divTablaConsulta').is(':empty')) {
+        var elementos = "<hr style=\"color: #0056b2;\"/> <h2>Consulta</h2><p>Aquí se puede ver información general de la factura y sus abonos.</p>";
+        var tableConsulta = "<table id=\"tablaConsulta\" class=\"table\"><thead class=\"thead-dark\"><tr><th scope=\"col\" class=\"numFact\">Numero de Factura</th><th scope=\"col\">Fecha de Factura</th><th scope=\"col\">Fecha Vencimiento</th><th scope=\"col\">Plazo</th><th scope=\"col\">Saldo</th><th scope=\"col\">Valor Total</th></tr></thead><tbody id=\"principal\"></tbody></table>";
+        $('#divTablaConsulta').append(elementos);
+        $('#divTablaConsulta').append(tableConsulta);
+    }
+    var infoFactura = "";
     var abonos = buscarAbonos(idFact);
     for (var i = 0; i < datosFacturas.length; i++) {
         if (datosFacturas[i][0] == idFact) {
-            cuerpoTabla = "<tr><td>" + datosFacturas[i][0] + "</td><td>" + datosFacturas[i][1] + "</td><td>" + CalcularFechaVencimiento(idFact) + "</td><td>" + datosFacturas[i][3] + "</td><td>" + abonos[0][3] + "</td><td>" + totalAbonos(buscarAbonos(idFact)) + "</td></tr>";
+            infoFactura = "<tr id=" + idFact + "><td>" + datosFacturas[i][0] + "</td><td>" + datosFacturas[i][1] + "</td><td>" + CalcularFechaVencimiento(idFact) + "</td><td>" + datosFacturas[i][3] + "</td><td>" + abonos[0][3] + "</td><td>" + totalAbonos(buscarAbonos(idFact)) + "</td></tr>";
             break;
         }
     }
-    var tablaAbonos = "<table id=\"tablaAbonos\" class=\"table table-borderless\"><thead ><tr><th scope=\"col\" class=\"\"></th><th scope=\"col\" class=\"\">#</th><th scope=\"col\" class=\"\">Valor de Abono</th><th scope=\"col\" class=\"numFact\">Observaciones</th></tr></thead><tbody>";
+    //Mini tabla de abonos de factura
+    var tablaAbonos = "<table id=\"tablaAbonos" + idFact + "\" class=\"table table-borderless\"><thead ><tr><th scope=\"col\" class=\"\"></th><th scope=\"col\" class=\"\">#</th><th scope=\"col\" class=\"\">Valor de Abono</th><th scope=\"col\" class=\"numFact\">Observaciones</th></tr></thead><tbody>";
     for (var j = 0; j < abonos.length; j++) {
-        tablaAbonos += "<tr><td><img src=\"./src/icons/arrow-return-right.svg\"></td><th scope=\"row\">" + j + "</th><td>" + abonos[j][2] + "</td><td>" + abonos[j][4] + "</td></tr>";
+        tablaAbonos += "<tr ><td><img src=\"./src/icons/arrow-return-right.svg\"></td><th scope=\"row\">" + (j + 1) + "</th><td>" + abonos[j][2] + "</td><td>" + abonos[j][4] + "</td></tr>";
     }
     tablaAbonos += "</tbody></table>";
-    cuerpoTabla += "<tr><td colspan=\"4\">" + tablaAbonos + "</td></tr>";
-    $('#divTablaConsulta').append(elementos);
-    $('#divTablaConsulta').append(tableConsulta);
-    $('#tablaConsulta tbody').append(cuerpoTabla);
+    infoFactura += "<tr id=" + idFact + "><td colspan=\"6\">" + tablaAbonos + "</td></tr>";
+    $('#tablaConsulta #principal').append(infoFactura);
 }
 /**
  * Trigger para el botón de consulta que extrae el id de la factura que 
  * se desea consultar.
  * @param  event click
  */
-$(document).on('click', '#consulta', function(event) {
+$(document).on('click', '.consulta', function(event) {
     event.preventDefault();
-    var row = $(this).closest('tr');
-    var idFact = row.find('td:eq(0)').text();
+    //Toma la fila en la que se encuentra el botón
+    var fila = $(this).closest('tr');
+    //Busca la columna del id y lo guarda
+    var idFact = fila.find('td:eq(0)').text();
     consulta(idFact);
     //Cambia el icono del botón
-    $('#lupa').attr("src", "./src/icons/zoom-out.svg");
+    $(this).find('img').attr("src", "./src/icons/zoom-out.svg");
     //Cambia el evento del botón
-    $('#consulta').attr("id", "ocultarConsulta");
+    $(this).attr("class", "ocultarConsulta");
 });
 /**
  * Trigger para ocultar la consulta.
  * @param  {[type]} event
- * @return {[type]}        [description]
  */
-$(document).on('click', '#ocultarConsulta', function(event) {
+$(document).on('click', '.ocultarConsulta', function(event) {
     event.preventDefault();
-    $('#lupa').attr("src", "./src/icons/zoom-in.svg");
-    $('#ocultarConsulta').attr("id", "consulta");
-    $('#divTablaConsulta').empty();
+    var fila = $(this).closest('tr');
+    var idFact = fila.find('td:eq(0)').text();
+    $(this).find('img').attr("src", "./src/icons/zoom-in.svg");
+    $(this).attr("class", "consulta");
+    $('#tablaConsulta #' + idFact + '').remove();
+    //Si la tabla de consultas está vacía elimina esa parte de la página
+    if ($('#tablaConsulta #principal').is(':empty')) {
+        $('#divTablaConsulta').empty();
+    }
 });
 /**
  * Método para mostrar los créditos con abonos que se encuentran en el sistema
