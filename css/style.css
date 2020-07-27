@@ -8,9 +8,34 @@
     font-size: 3em;
     display: block;
 }
-#consulta {
-    display: flex;
-    border: none;
-    position: :fixed;
-    background-color: transparent;
+
+
+
+
+/* validaciones */
+
+.form-group i {
+    visibility: hidden;
+    display:none;
+}
+
+.form-group.success i.fa-check {
+	color: #2ecc71;
+    visibility: visible;
+    display:block;
+    
+}
+
+.form-group.error i.fa-times {
+    color:  #e74c3c;
+    visibility: visible;
+    display:block;
+}
+
+.form-group small{
+    visibility: hidden;
+}
+
+.form-group.error small{
+    visibility: visible;
 }
