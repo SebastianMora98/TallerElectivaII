@@ -1,5 +1,5 @@
 //Objeto JSON facturas
-var facturasJSONTxt = '{"facturas":[' + '{"numero":"345345","fecha":"2017-07-21","tipoPago":"Crédito","plazo":"30","valorTotal":"234454" },' + '{"numero":"872034","fecha":"2020-06-25","tipoPago":"Contado","plazo":"","valorTotal":"7435246" },' + '{"numero":"293658","fecha":"2018-12-04","tipoPago":"Crédito","plazo":"90","valorTotal":"932937" } ]}';
+var facturasJSONTxt = '{"facturas":[' + '{"numero":"46778","fecha":"2020-07-30","tipoPago":"Contado","plazo":"95","valorTotal":"234454" },' + '{"numero":"565945","fecha":"2020-07-21","tipoPago":"Contado","plazo":"95","valorTotal":"234454" },' + '{"numero":"45000","fecha":"2017-07-21","tipoPago":"Contado","plazo":"95","valorTotal":"234454" },' + '{"numero":"990945","fecha":"2017-07-21","tipoPago":"Contado","plazo":"95","valorTotal":"234454" },' + '{"numero":"4995345","fecha":"2017-07-21","tipoPago":"Crédito","plazo":"95","valorTotal":"234454" },' + '{"numero":"490538","fecha":"2017-07-21","tipoPago":"Crédito","plazo":"47","valorTotal":"234454" },' + '{"numero":"4905345","fecha":"2017-07-21","tipoPago":"Crédito","plazo":"45","valorTotal":"234454" },' + '{"numero":"3455326","fecha":"2017-07-21","tipoPago":"Crédito","plazo":"100","valorTotal":"234454" },' + '{"numero":"345345","fecha":"2017-07-21","tipoPago":"Crédito","plazo":"30","valorTotal":"234454" },' + '{"numero":"872034","fecha":"2020-06-25","tipoPago":"Contado","plazo":"","valorTotal":"7435246" },' + '{"numero":"293658","fecha":"2018-12-04","tipoPago":"Crédito","plazo":"90","valorTotal":"932937" } ]}';
 // Objeto facturas
 var facturasJSON = JSON.parse(facturasJSONTxt);
 // datosFacturas es un array que guarda arrays con unicamente los datos de las facturas
@@ -50,9 +50,47 @@ function buscarFactura(numero) {
     });
     return factura;
 }
+// Buscar Facturas por plazos
+function buscarFacturaPorPlazo(inicio, final) {
+    var fila = "";
+    limpiarTabla('tableCartera');
+    datosFacturas.forEach(factura => {
+        if (final != '+') {
+            if (factura[3] >= inicio && factura[3] <= final) {
+                fila = "<tr><td>" + factura[0] + "</td><td>" + factura[1] + "</td><td>" + factura[2] + "</td><td>" + factura[3] + "</td><td>" + factura[4] + "</td></tr>";
+                $('#tableCartera tbody').append(fila);
+            }
+        } else {
+            if (factura[3] >= inicio) {
+                fila = "<tr><td>" + factura[0] + "</td><td>" + factura[1] + "</td><td>" + factura[2] + "</td><td>" + factura[3] + "</td><td>" + factura[4] + "</td></tr>";
+                $('#tableCartera tbody').append(fila);
+            }
+        }
+    });
+    return factura;
+}
+$(document).on('click', 'input[type="checkbox"]', function() {
+    $('input[type="checkbox"]').not(this).prop('checked', false);
+});
+$(".plazos").on('change', function() {
+    if (this.checked) {
+        if ($(this).val() == 1) {
+            buscarFacturaPorPlazo(1, 30);
+        }
+        if ($(this).val() == 2) {
+            buscarFacturaPorPlazo(31, 60);
+        }
+        if ($(this).val() == 3) {
+            buscarFacturaPorPlazo(61, 90);
+        }
+        if ($(this).val() == 4) {
+            buscarFacturaPorPlazo(91, '+');
+        }
+    }
+});
 // Eventos - input numero de factura e input valor abono
 var factura;
-$("#inputNumeroFactura").on('input', function () {
+$("#inputNumeroFactura").on('input', function() {
     // busca si el numero de factura ingresado ya existe y si existe guarda el
     // array de la factura en "factura"
     factura = buscarFactura($("#inputNumeroFactura").val())
@@ -67,82 +105,24 @@ $("#inputNumeroFactura").on('input', function () {
 });
 // Cuando se ingresa un valor en input valor abono resta el saldo de la factura con el
 // valor de abono ingresado y lo muestra en input Nuevo Saldo
-$("#inputValorAbono").on('input', function () {
+$("#inputValorAbono").on('input', function() {
     if (factura.length > 0) {
         // factura[4] tiene el saldo de la factura
         $("#inputNuevoSaldo").val(factura[4] - parseInt($("#inputValorAbono").val()))
     }
 });
-
-function validar() {
-
-    var numeroFactura = document.getElementById('inputNumeroFactura');
-    var saldoFactura = document.getElementById('inputSaldoFactura');
-    var valorAbono = document.getElementById('inputValorAbono');
-    var nuevoSaldo = document.getElementById('inputNuevoSaldo');
-
-    if (numeroFactura.value == "") {
-        MensajeError(numeroFactura, " Ingrese un valor")
-        return false;
-    }
-    if (valorAbono.value == "") {
-        MensajeError(valorAbono, " Ingrese un valor")
-        return false;
-    }
-
-    // validacion numero factura
-    if (buscarFactura("" + numeroFactura.value).length > 0) {
-        MensajeExito(numeroFactura)
-
-    } else {
-        MensajeError(numeroFactura, "La factura no existe")
-        return false;
-    }
-
-    // validacion valor abono
-    if (parseInt(valorAbono.value) > 0 && parseInt(valorAbono.value) < parseInt(saldoFactura.value)) {
-        MensajeExito(valorAbono)
-        return true;
-    } else {
-        if(parseInt(valorAbono.value) < 0){
-            MensajeError(valorAbono, "Valor invalido, El valor ingresado debe ser positivo")
-            return false;
-        }else{
-            MensajeError(valorAbono, "Valor invalido, El valor ingresado debe ser menor al saldo")
-            return false;
-        }
-    }
-}
-
-function MensajeError(input, message) {
-    const formGroup = input.parentElement;
-    const small = formGroup.querySelector('small');
-    formGroup.className = 'form-group error col-md-6 error';
-    small.innerText = message;
-}
-
-function MensajeExito(input) {
-    const formGroup = input.parentElement;
-    formGroup.className = 'form-group success col-md-6 ';
-}
-
 // Guarda los datos enviados del formulario al array abonosIngresados
-$("#formulario").submit(function (event) {
+$("#formulario").submit(function(event) {
     event.preventDefault();
-
-    if (validar()) {
-        abonosIngresados.push([
-            $("#inputNumeroFactura").val(),
-            $("#inputSaldoFactura").val(),
-            $("#inputValorAbono").val(),
-            $("#inputNuevoSaldo").val(),
-            $("#textareaObservaciones").val()
-        ]);
-
-        console.log("Abonos ingresados", abonosIngresados);
-        mostrarTAbonos();
-    }
-
+    abonosIngresados.push([
+        $("#inputNumeroFactura").val(),
+        $("#inputSaldoFactura").val(),
+        $("#inputValorAbono").val(),
+        $("#inputNuevoSaldo").val(),
+        $("#textareaObservaciones").val()
+    ]);
+    console.log("Abonos ingresados", abonosIngresados);
+    mostrarTAbonos();
 });
 // metodo que busca los abonos dependiendo del numero de factura
 // retorna un vector con los abonos asociados a la factura
@@ -273,7 +253,7 @@ function consulta(idFact) {
  * se desea consultar.
  * @param  event click
  */
-$(document).on('click', '.consulta', function (event) {
+$(document).on('click', '.consulta', function(event) {
     event.preventDefault();
     //Toma la fila en la que se encuentra el botón
     var fila = $(this).closest('tr');
@@ -289,7 +269,7 @@ $(document).on('click', '.consulta', function (event) {
  * Trigger para ocultar la consulta.
  * @param  {[type]} event
  */
-$(document).on('click', '.ocultarConsulta', function (event) {
+$(document).on('click', '.ocultarConsulta', function(event) {
     event.preventDefault();
     var fila = $(this).closest('tr');
     var idFact = fila.find('td:eq(0)').text();
