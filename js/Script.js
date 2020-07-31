@@ -1,5 +1,5 @@
 //Objeto JSON facturas
-var facturasJSONTxt = '{"facturas":[' + '{"numero":"345345","fecha":"2017-07-21","tipoPago":"Crédito","plazo":"30","valorTotal":"234454" },' + '{"numero":"872034","fecha":"2020-06-25","tipoPago":"Contado","plazo":"","valorTotal":"7435246" },' + '{"numero":"293658","fecha":"2018-12-04","tipoPago":"Crédito","plazo":"90","valorTotal":"932937" } ]}';
+var facturasJSONTxt = '{"facturas":[' + '{"numero":"46778","fecha":"2020-07-30","tipoPago":"Contado","plazo":"95","valorTotal":"234454" },' + '{"numero":"565945","fecha":"2020-07-21","tipoPago":"Contado","plazo":"95","valorTotal":"234454" },' + '{"numero":"45000","fecha":"2017-07-21","tipoPago":"Contado","plazo":"95","valorTotal":"234454" },' + '{"numero":"990945","fecha":"2017-07-21","tipoPago":"Contado","plazo":"95","valorTotal":"234454" },' + '{"numero":"4995345","fecha":"2017-07-21","tipoPago":"Crédito","plazo":"95","valorTotal":"234454" },' + '{"numero":"490538","fecha":"2017-07-21","tipoPago":"Crédito","plazo":"47","valorTotal":"234454" },' + '{"numero":"4905345","fecha":"2017-07-21","tipoPago":"Crédito","plazo":"45","valorTotal":"234454" },' + '{"numero":"3455326","fecha":"2017-07-21","tipoPago":"Crédito","plazo":"100","valorTotal":"234454" },' + '{"numero":"345345","fecha":"2017-07-21","tipoPago":"Crédito","plazo":"30","valorTotal":"234454" },' + '{"numero":"872034","fecha":"2020-06-25","tipoPago":"Contado","plazo":"","valorTotal":"7435246" },' + '{"numero":"293658","fecha":"2018-12-04","tipoPago":"Crédito","plazo":"90","valorTotal":"932937" } ]}';
 // Objeto facturas
 var facturasJSON = JSON.parse(facturasJSONTxt);
 // datosFacturas es un array que guarda arrays con unicamente los datos de las facturas
@@ -50,6 +50,44 @@ function buscarFactura(numero) {
     });
     return factura;
 }
+// Buscar Facturas por plazos
+function buscarFacturaPorPlazo(inicio, final) {
+    var fila = "";
+    limpiarTabla('tableCartera');
+    datosFacturas.forEach(factura => {
+        if (final != '+') {
+            if (factura[3] >= inicio && factura[3] <= final) {
+                fila = "<tr><td>" + factura[0] + "</td><td>" + factura[1] + "</td><td>" + factura[2] + "</td><td>" + factura[3] + "</td><td>" + factura[4] + "</td></tr>";
+                $('#tableCartera tbody').append(fila);
+            }
+        } else {
+            if (factura[3] >= inicio) {
+                fila = "<tr><td>" + factura[0] + "</td><td>" + factura[1] + "</td><td>" + factura[2] + "</td><td>" + factura[3] + "</td><td>" + factura[4] + "</td></tr>";
+                $('#tableCartera tbody').append(fila);
+            }
+        }
+    });
+    return factura;
+}
+$(document).on('click', 'input[type="checkbox"]', function() {
+    $('input[type="checkbox"]').not(this).prop('checked', false);
+});
+$(".plazos").on('change', function() {
+    if (this.checked) {
+        if ($(this).val() == 1) {
+            buscarFacturaPorPlazo(1, 30);
+        }
+        if ($(this).val() == 2) {
+            buscarFacturaPorPlazo(31, 60);
+        }
+        if ($(this).val() == 3) {
+            buscarFacturaPorPlazo(61, 90);
+        }
+        if ($(this).val() == 4) {
+            buscarFacturaPorPlazo(91, '+');
+        }
+    }
+});
 // Eventos - input numero de factura e input valor abono
 var factura;
 $("#inputNumeroFactura").on('input', function() {
