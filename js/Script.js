@@ -342,11 +342,10 @@ function mostrarTAbonos() {
             idFact = datosFacturas[i][0];
             if (buscarAbonos(idFact).length > 0) {
                 saldo = buscarAbonos(idFact)[0][3];
-                console.log("abonos ingresados",abonosIngresados)
-                fila = "<tr><td>" + idFact + "</td><td>" + buscarAbonos(idFact).length + "</td><td>" + totalAbonos(buscarAbonos(idFact)) + "</td><td>" + CalcularFechaVencimiento(idFact) + "</td><td>" + datosFacturas[i][4] + "</td><td>" + botonConsulta + "</td></tr>";
+                fila = "<tr><td>" + idFact + "</td><td>" + buscarAbonos(idFact).length + "</td><td>" + formato(totalAbonos(buscarAbonos(idFact))) + "</td><td>" + CalcularFechaVencimiento(idFact) + "</td><td>" + formato(parseInt(datosFacturas[i][4])) + "</td><td>" + botonConsulta + "</td></tr>";
               
                 $('#tablaFAbono tbody').append(fila);
-                console.log("saaaaaaaldo",saldo)
+           
             }
         }
     }
@@ -368,14 +367,16 @@ function consulta(idFact) {
     var abonos = buscarAbonos(idFact);
     for (var i = 0; i < datosFacturas.length; i++) {
         if (datosFacturas[i][0] == idFact) {
-            infoFactura = "<tr id=" + idFact + "><td>" + datosFacturas[i][0] + "</td><td>" + datosFacturas[i][1] + "</td><td>" + CalcularFechaVencimiento(idFact) + "</td><td>" + datosFacturas[i][3] + "</td><td>" + datosFacturas[i][4] + "</td><td>" + totalAbonos(buscarAbonos(idFact)) + "</td></tr>";
+
+            infoFactura = "<tr id=" + idFact + "><td>" + datosFacturas[i][0] + "</td><td>" + datosFacturas[i][1] + "</td><td>" + CalcularFechaVencimiento(idFact) + "</td><td>" + datosFacturas[i][3] + "</td><td>" + formato(parseInt(datosFacturas[i][4])) + "</td><td>" + formato(totalAbonos(buscarAbonos(idFact))) + "</td></tr>";
+            
             break;
         }
     }
     //Mini tabla de abonos de factura
     var tablaAbonos = "<table id=\"tablaAbonos" + idFact + "\" class=\"table table-borderless\"><thead ><tr><th scope=\"col\" class=\"\"></th><th scope=\"col\" class=\"\">#</th><th scope=\"col\" class=\"\">Valor de Abono</th><th scope=\"col\" class=\"numFact\">Observaciones</th></tr></thead><tbody>";
     for (var j = 0; j < abonos.length; j++) {
-        tablaAbonos += "<tr ><td><img src=\"./src/icons/arrow-return-right.svg\"></td><th scope=\"row\">" + (j + 1) + "</th><td>" + abonos[j][2] + "</td><td>" + abonos[j][4] + "</td></tr>";
+        tablaAbonos += "<tr ><td><img src=\"./src/icons/arrow-return-right.svg\"></td><th scope=\"row\">" + (j + 1) + "</th><td>" + formato(abonos[j][2]) + "</td><td>" + abonos[j][4] + "</td></tr>";
     }
     tablaAbonos += "</tbody></table>";
     infoFactura += "<tr id=" + idFact + "><td colspan=\"6\">" + tablaAbonos + "</td></tr>";
