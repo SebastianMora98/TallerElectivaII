@@ -188,16 +188,20 @@ function validar() {
     // si la factura existe
     if (factura.length > 0) {
 
-        
-        if (parseInt(valorAbono.value) > 0 && valorNuevoSaldo > 0 &&parseInt(valorAbono.value) < parseInt(factura[4])) {  
+
+        if (parseInt(valorAbono.value) > 0 && valorNuevoSaldo >= 0 &&parseInt(valorAbono.value) <= parseInt(factura[4])) {  
             MensajeExito(valorAbono)
             return true;
         } else {
-            if(parseInt(valorAbono.value) < 0){
-                MensajeError(valorAbono, "Valor invalido, El valor ingresado debe ser positivo")
+
+            if(parseInt(factura[4]) == 0){
+                MensajeError(valorAbono, "El valor de la factura es 0, no se pueden realizar mas abonos.")
+                return false;
+            }
+            if(parseInt(valorAbono.value) <= 0){
+                MensajeError(valorAbono, "Valor invalido, El valor ingresado debe ser mayor a cero")
                 return false;
             }else{
-                
                 MensajeError(valorAbono, "Valor invalido, El valor ingresado debe ser menor al saldo")
                 return false;
             }
