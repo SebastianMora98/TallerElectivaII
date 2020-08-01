@@ -78,12 +78,12 @@ function buscarFacturaPorPlazo(inicio, final) {
     datosFacturas.forEach(factura => {
         if (final != '+') {
             if (factura[3] >= inicio && factura[3] <= final) {
-                fila = "<tr><td>" + factura[0] + "</td><td>" + factura[1] + "</td><td>" + factura[2] + "</td><td>" + factura[3] + "</td><td>" + factura[4] + "</td></tr>";
+                fila = "<tr><td>" + factura[0] + "</td><td>" + factura[1] + "</td><td>" + factura[2] + "</td><td>" + factura[3] + "</td><td>" + formato(parseInt(factura[4], 10)) + "</td></tr>";
                 $('#tableCartera tbody').append(fila);
             }
         } else {
             if (factura[3] >= inicio) {
-                fila = "<tr><td>" + factura[0] + "</td><td>" + factura[1] + "</td><td>" + factura[2] + "</td><td>" + factura[3] + "</td><td>" + factura[4] + "</td></tr>";
+                fila = "<tr><td>" + factura[0] + "</td><td>" + factura[1] + "</td><td>" + factura[2] + "</td><td>" + factura[3] + "</td><td>" + formato(parseInt(factura[4], 10)) + "</td></tr>";
                 $('#tableCartera tbody').append(fila);
             }
         }
