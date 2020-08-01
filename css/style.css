@@ -1,0 +1,41 @@
+.card-header {
+    background: white;
+    background: -webkit-linear-gradient(to right, #2b32b2, cyan);
+    background: linear-gradient(to right, #2b32b2, cyan);
+}
+.card-header h1 {
+    color: white;
+    font-size: 3em;
+    display: block;
+}
+
+
+
+
+/* validaciones */
+
+.form-group i {
+    visibility: hidden;
+    display:none;
+}
+
+.form-group.success i.fa-check {
+	color: #2ecc71;
+    visibility: visible;
+    display:block;
+    
+}
+
+.form-group.error i.fa-times {
+    color:  #e74c3c;
+    visibility: visible;
+    display:block;
+}
+
+.form-group small{
+    visibility: hidden;
+}
+
+.form-group.error small{
+    visibility: visible;
+}
